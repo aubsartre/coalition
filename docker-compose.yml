@@ -1,8 +1,17 @@
-coalition:
-  build: .
-  ports:
-  - 19211:19211
-  volumes:
-  - ./coalition.ini:/usr/src/app/coalition.ini:z
-  - ./data:/usr/src/app/data:z
-  restart: always
+version: '3.2'
+
+services:
+  web:
+    build: .
+    ports:
+      - 19211:19211
+
+    volumes:
+      - type: volume
+        source: coalition-data
+        target: /usr/src/app/data
+
+    restart: always
+
+volumes:
+  coalition-data:
