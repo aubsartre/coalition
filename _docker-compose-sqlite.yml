@@ -1,0 +1,27 @@
+version: '3.7'
+
+# NB: Keys starting with "x-" are docker-compose (v3.4+) extension fields, q.v.
+x-network-name: &network coalitionnet  # network name definition
+
+x-data-volume: &data-volume coalition-sqlite-data  # data volume name definition
+
+x-service-defaults: &service-defaults  # all services below share these
+    restart: always
+    networks:
+        - *network
+
+x-webserver-ports: &webserver_ports "${WEBSERVER_EXT_PORT}:${WEBSERVER_INT_PORT}"
+
+services:
+  web:
+   <<: *service-defaults
+    build: .
+    ports:
+      - *webserver_ports
+    volumes:
+      - type: volume
+        source: *data-volume
+        target: /usr/src/app/data
+
+volumes:
+  *data-volume:

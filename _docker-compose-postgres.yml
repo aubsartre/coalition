@@ -1,0 +1,60 @@
+version: '3.7'
+
+# NB: Keys starting with "x-" are docker-compose (v3.4+) extension fields, q.v.
+x-network-name: &network coalitionnet  # network name definition
+
+x-data-volume: &data-volume coalition-pg-data  # data volume name definition
+
+x-service-defaults: &service-defaults  # all services below share these
+    restart: always
+    networks:
+        - *network
+
+x-db-ports: &db_ports "${DB_EXT_PORT}:${DB_INT_PORT}"
+x-webserver-ports: &webserver_ports "${WEBSERVER_EXT_PORT}:${WEBSERVER_INT_PORT}"
+x-monitor-ports: &monitor_ports "${MONITOR_EXT_PORT}:${MONITOR_INT_PORT}"
+
+services:
+  # Database/backend
+  db:
+    <<: *service-defaults
+    build:
+      dockerfile: Dockerfile-postgres
+      context: .
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - *db_ports
+    volumes:
+      - type: volume
+        source: *data-volume
+        target: /var/lib/postgresql/data
+
+  # Web server/frontend
+  web:
+    <<: *service-defaults
+    build:
+      dockerfile: Dockerfile
+      context: .
+    depends_on:
+      - db
+    ports:
+      - *webserver_ports
+
+  # DB monitoring tool
+  monitor:
+    <<: *service-defaults
+    image: adminer
+    depends_on:
+      - db
+    ports:
+      - *monitor_ports
+
+networks:
+  *network:
+    driver: bridge
+
+volumes:
+  *data-volume:

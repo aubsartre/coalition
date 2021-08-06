@@ -1,0 +1,58 @@
+version: '3.7'
+
+# NB: Keys starting with "x-" are docker-compose (v3.4+) extension fields, q.v.
+x-network-name: &network coalitionnet  # network name definition
+
+x-data-volume: &data-volume coalition-my-data  # data volume name definition
+
+x-service-defaults: &service-defaults  # all services below share these
+    restart: always
+    networks:
+        - *network
+
+x-db-ports: &db_ports "${DB_EXT_PORT}:${DB_INT_PORT}"
+x-webserver-ports: &webserver_ports "${WEBSERVER_EXT_PORT}:${WEBSERVER_INT_PORT}"
+x-monitor-ports: &monitor_ports "${MONITOR_EXT_PORT}:${MONITOR_INT_PORT}"
+
+services:
+  # Database/backend
+  db:
+    <<: *service-defaults
+    image: mysql
+    command: mysqld --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: coalition
+      MYSQL_USER: coalition
+      MYSQL_PASSWORD: coalition
+    ports:
+      - *db_ports
+    volumes:
+      - type: volume
+        source: *data-volume
+        target: /var/lib/mysql
+
+  # Web server/frontend
+  web:
+    <<: *service-defaults
+    build: .
+    depends_on:
+      - db
+    ports:
+      - *webserver_ports
+
+  # DB monitoring tool
+  monitor:
+    <<: *service-defaults
+    image: adminer
+    depends_on:
+      - db
+    ports:
+      - *monitor_ports
+
+networks:
+  *network:
+    driver: bridge
+
+volumes:
+  *data-volume
