@@ -807,10 +807,15 @@ else:
 	vprint ("[Init] Running standard console")
 
 # Init the good database
-if cfgStr ('db_type', 'sqlite') == "mysql":
+_db_type = cfgStr('db_type', 'sqlite')
+if _db_type == "mysql":
 	vprint ("[Init] Use mysql")
 	from db_mysql import DBMySQL
 	db = DBMySQL (cfgStr ('db_mysql_host', "127.0.0.1"), cfgStr ('db_mysql_user', ""), cfgStr ('db_mysql_password', ""), cfgStr ('db_mysql_base', "base"), config=config, cloudconfig=cloudconfig)
+elif _db_type == "postgres":
+	vprint ("[Init] Use postgres")
+	from db_postgresql import DBPostgreSQL
+	db = DBPostgreSQL (cfgStr ('db_postgresql_host', "127.0.0.1"), cfgStr ('db_postgresql_user', ""), cfgStr ('db_postgresql_password', ""), cfgStr ('db_postgresql_base', "base"), config=config, cloudconfig=cloudconfig)
 else:
 	vprint ("[Init] Use sqlite")
 	from db_sqlite import DBSQLite
