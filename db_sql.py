@@ -38,6 +38,13 @@ class DBSQL(DB):
                                     )
                                     """)
 
+    GET_JOB_CHILDREN_QUERY_TEMPLATE = dedent("""\
+                                            SELECT * FROM Jobs
+                                            WHERE parent = {id} {ldap_perm}
+                                            ORDER BY {sortKey} {sortOrder}
+                                            LIMIT {offset}, {limit}
+                                            """)
+
     def __init__ (self):
         self.StartTime = time.time ()
         self.lastworkerinstancestarttime = 0
@@ -345,10 +352,10 @@ class DBSQL(DB):
         ldap_perm = self._getLdapPermission("viewjob")
         if ldap_perm is False:
             return None
+
+        sql = self.GET_JOB_CHILDREN_QUERY_TEMPLATE.format(id=id, ldap_perm=ldap_perm)
         cur = self.Conn.cursor()
-        self._execute(cur,
-            "SELECT * FROM Jobs "
-            "WHERE parent = {id} {ldap_perm}".format(id=id, ldap_perm=ldap_perm))
+        self._execute(cur, sql)
         jobs = []
         for row in cur:
             result = self._rowAsDict (cur, row)
