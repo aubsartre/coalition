@@ -353,7 +353,30 @@ class DBSQL(DB):
         if ldap_perm is False:
             return None
 
-        sql = self.GET_JOB_CHILDREN_QUERY_TEMPLATE.format(id=id, ldap_perm=ldap_perm)
+        if 'offset' not in data:
+            data['offset'] = [0]
+
+        if 'limit' not in data:
+            data['limit'] = [100000]
+
+        if 'sortKey' in data:
+            sortKey = data['sortKey'][0]
+        else:
+            sortKey = 'id'
+
+        if 'sortOrder' in data and data['sortOrder'][0] == 'true':
+            sortOrder = ''
+        else:
+            sortOrder = 'DESC'
+
+        sql = self.GET_JOB_CHILDREN_QUERY_TEMPLATE.format(
+                id=id,
+                ldap_perm=ldap_perm,
+                sortKey=sortKey,
+                sortOrder=sortOrder,
+                offset=data["offset"][0],
+                limit=data["limit"][0])
+
         cur = self.Conn.cursor()
         self._execute(cur, sql)
         jobs = []
