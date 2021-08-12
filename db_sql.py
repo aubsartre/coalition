@@ -22,6 +22,20 @@ class LdapError(Exception):
 
 class DBSQL(DB):
 
+	NEW_JOB_QUERY_TEMPLATE = dedent("""\
+									INSERT INTO Jobs (
+										parent, title, command, dir, environment, timeout,
+										priority, affinity, affinity_bits, username, url,
+										progress_pattern, paused, state, worker, h_depth,
+										h_affinity, h_priority, h_paused, comments
+									) VALUES (
+										{parent}, {title}, {command}, {dir}, {environment}, {timeout},
+										{priority}, {affinity}, {affinity_bits}, {username}, {url},
+										{progress_pattern}, {paused}, {state}, {worker}, {h_depth},
+										{h_affinity}, {h_priority}, {h_paused}, {comments}
+									)
+									""")
+
 	def __init__ (self):
 		self.StartTime = time.time ()
 		self.lastworkerinstancestarttime = 0
@@ -271,22 +285,27 @@ class DBSQL(DB):
 		h_priority = data[2] + (priority << (56-h_depth*8))
 		h_paused = data[3] or paused
 
-		self._execute (cur,
-			"INSERT INTO Jobs ("
-			"parent, title, command, dir, environment, timeout,"
-			"priority, affinity, affinity_bits, user, url,"
-			"progress_pattern, paused, state, worker, h_depth,"
-			"h_affinity, h_priority, h_paused"
-			") VALUES ("
-			"{parent}, {title}, {command}, {directory}, {environment}, {timeout},"
-			"{priority}, {affinity}, {child_affinities}, {user}, {url},"
-			"{progress_pattern}, {paused}, {state}, {worker}, {h_depth},"
-			"{h_affinity}, {h_priority}, {h_paused})".format(parent=parent, title=repr(title), command=repr(command),
-			directory=repr(dir), environment=repr(environment), timeout=timeout,
-			priority=priority, affinity=repr(affinity), child_affinities=child_affinities,
-			user=repr(user), url=repr(url), progress_pattern=repr(progress_pattern),
-			paused="'"+str(paused)+"'", state="'WAITING'", worker="''", h_depth=int(h_depth),
-			h_affinity=h_affinity, h_priority=int(h_priority), h_paused="'"+str(h_paused)+"'"))
+		sql = self.NEW_JOB_QUERY_TEMPLATE.format(parent=parent,
+													title=repr(title),
+													command=repr(command),
+													dir=repr(dir),
+													environment=repr(environment),
+													timeout=timeout,
+													priority=priority,
+													affinity=repr(affinity),
+													affinity_bits=child_affinities,
+													username=repr(user),
+													url=repr(url),
+													progress_pattern=repr(progress_pattern),
+													paused="'"+str(paused)+"'",
+													state="'WAITING'",
+													worker="''",
+													h_depth=int(h_depth),
+													h_affinity=h_affinity,
+													h_priority=int(h_priority),
+													h_paused="'"+str(h_paused)+"'")
+
+		self._execute(cur, sql)
 
 		data = cur.fetchone ()
 		job = self.getJob (cur.lastrowid)
