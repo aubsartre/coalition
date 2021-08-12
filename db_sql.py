@@ -22,6 +22,8 @@ class LdapError(Exception):
 
 class DBSQL(DB):
 
+	PRIORITY_MAX_BYTE_DEPTH = 7  # [bytes]
+
 	NEW_JOB_QUERY_TEMPLATE = dedent("""\
 									INSERT INTO Jobs (
 										parent, title, command, dir, environment, timeout,
@@ -282,7 +284,7 @@ class DBSQL(DB):
 		h_affinity = parent_affinities | child_affinities
 		# merge priority
 		priority = max(0, min(255, int(priority)))
-		h_priority = data[2] + (priority << (56-h_depth*8))
+		h_priority = data[2] + (priority << 8 * (self.PRIORITY_MAX_BYTE_DEPTH - h_depth))
 		h_paused = data[3] or paused
 
 		sql = self.NEW_JOB_QUERY_TEMPLATE.format(parent=parent,
@@ -1190,7 +1192,7 @@ class DBSQL(DB):
 				parenth = cur.fetchone () or (-1, 0, 0, False)
 			h_depth = parenth[0]+1
 			h_affinity = parenth[1] | job[1]
-			h_priority = parenth[2] + (job[2] << (56-h_depth*8))
+			h_priority = parenth[2] + (job[2] << (8 * (self.PRIORITY_MAX_BYTE_DEPTH - h_depth)))
 			if parenth[3] or job[3] or job[4] == "PENDING":
 				h_paused = 1
 			else:
