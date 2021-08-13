@@ -45,6 +45,8 @@ class DBSQL(DB):
 											LIMIT {offset}, {limit}
 											""")
 
+	GET_JOBS_WHERE_QUERY_TEMPLATE = "SELECT * FROM Jobs WHERE {where_clause} LIMIT {min},{max}"
+
 	def __init__ (self):
 		self.StartTime = time.time ()
 		self.lastworkerinstancestarttime = 0
@@ -417,7 +419,8 @@ class DBSQL(DB):
 	def getJobsWhere(self, where_clause='', index_min=0, index_max=1):
 		"""Get Jobs via a readonly SQL request."""
 		cur = self.Conn.cursor()
-		self._execute(cur, "SELECT * FROM Jobs WHERE {} LIMIT {},{}".format(where_clause, index_min, index_max))
+		sql = self.GET_JOBS_WHERE_QUERY_TEMPLATE.format(where_clause=where_clause, min=index_min, max=index_max)
+		self._execute(cur, sql)
 		return [self._rowAsDict (cur, row) for row in cur.fetchall()]
 
 	def getJobsUsers(self):
