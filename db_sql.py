@@ -47,6 +47,11 @@ class DBSQL(DB):
 
     GET_JOBS_WHERE_QUERY_TEMPLATE = "SELECT * FROM Jobs WHERE {where_clause} LIMIT {min},{max}"
 
+    ADD_EVENT_QUERY_TEMPLATE = dedent("""\
+                                        INSERT INTO Events (worker, job_id, job_title, state, start, duration)
+                                        VALUES ({worker}, {job_id}, {job_title}, 'WORKING', {start}, {duration})
+                                        """)
+
     def __init__ (self):
         self.StartTime = time.time ()
         self.lastworkerinstancestarttime = 0
@@ -1008,10 +1013,8 @@ class DBSQL(DB):
         id = job[0]
 
         # create a new event
-        self._execute (cur, "INSERT INTO Events (worker, job_id, job_title, state, start, duration) "
-                                "VALUES (%s, %d, %s, 'WORKING', %d, %d)" %
-                                (convdata (hostname), job[0], convdata (job[1]),
-                                    current_time, 0))
+        sql = self.ADD_EVENT_QUERY_TEMPLATE.format((convdata(hostname), job[0], convdata(job[1]), current_time, 0))
+        self._execute (cur, sql)
         cur.fetchone ()
         eventid = cur.lastrowid
 
