@@ -54,7 +54,7 @@ class DBSQL(DB):
 			self._update ()
 		self.Conn.__exit__ (type, value, traceback)
 
-	def _execute (self, cur, req, data=None):
+	def _execute (self, cur, req, data=None, return_id=False):
 		now = time.time ()
 		if data:
 			cur.execute (req, data)
@@ -65,6 +65,10 @@ class DBSQL(DB):
 			sys.stdout.flush ()
 			sys.stdout.write ("[SQL] (%f/%f) %s\n" % (now-self.StartTime, after-now, req))
 			sys.stdout.flush ()
+
+		if return_id:
+			id_ = cur.lastrowid
+			return id_
 
 	def _rowAsDict (self, cur, row):
 		if row:
