@@ -321,10 +321,8 @@ class DBSQL(DB):
 													h_priority=int(h_priority),
 													h_paused="'"+str(h_paused)+"'")
 
-		self._execute(cur, sql)
-
-		data = cur.fetchone ()
-		job = self.getJob (cur.lastrowid)
+		job_id = self._execute(cur, sql, return_id=True)
+		job = self.getJob(job_id)
 		if job is not None and dependencies is not None:
 			self.setJobDependencies (job['id'], dependencies)
 		self._updateJobCounters (parent)
