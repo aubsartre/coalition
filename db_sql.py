@@ -52,6 +52,12 @@ class DBSQL(DB):
                                         VALUES ({worker}, {job_id}, {job_title}, 'WORKING', {start}, {duration})
                                         """)
 
+    UPDATE_CHILDREN_HIERARCHY_QUERY_TEMPLATE = dedent("""\
+                                            UPDATE Jobs
+                                            SET h_depth = {:d}, h_affinity = {:d}, h_priority = {:d}, h_paused = {:d}
+                                            WHERE id = {:d}
+                                            """)  # see _updateChildren()
+
     def __init__ (self):
         self.StartTime = time.time ()
         self.lastworkerinstancestarttime = 0
@@ -1227,8 +1233,9 @@ class DBSQL(DB):
                 h_paused = 1
             else:
                 h_paused = 0
-            self._execute (cur, "UPDATE Jobs SET h_depth = %d, h_affinity = %d, h_priority = %d, h_paused = %d "
-                "WHERE id = %d" % (h_depth, h_affinity, h_priority, h_paused, id))
+
+            req = self.UPDATE_CHILDREN_HIERARCHY_QUERY_TEMPLATE.format(h_depth, h_affinity, h_priority, h_paused, id)
+            self._execute (cur, req)
             self._execute (cur, "SELECT id FROM Jobs WHERE parent = %d" % id)
             jobh = [h_depth,h_affinity,h_priority,h_paused]
             for child in cur:
