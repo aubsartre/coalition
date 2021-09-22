@@ -49,7 +49,7 @@ Logged as a priviledged user, in a shell prompt, run::
   git clone https://github.com/MercenariesEngineering/coalition.git
   cd coalition
   pip install -r requirements.txt
-  cp _coalition.ini coalition.ini
+  cp _coalition_<xxx>.ini coalition.ini  # where <xxx> is [mysql | postgres | sqlite]
 
 Edit the section *[server]* in the file *coalition.ini* according to your needs.
 
