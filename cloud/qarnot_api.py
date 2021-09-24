@@ -61,4 +61,3 @@ def _getStartupScript(name, config):
     return template.substitute(values)
 
 
-# vim: tabstop=4 noexpandtab shiftwidth=4 softtabstop=4 textwidth=79

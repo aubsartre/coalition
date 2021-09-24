@@ -31,5 +31,4 @@ def _check_output_or_none(cmd):
         print(e)
     return None
 
-# vim: tabstop=4 noexpandtab shiftwidth=4 softtabstop=4 textwidth=79
 

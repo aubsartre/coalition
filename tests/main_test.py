@@ -509,5 +509,4 @@ if __name__ == "__main__":
         exit(0)
     else:
         exit(1)
-# vim: tabstop=4 noexpandtab shiftwidth=4 softtabstop=4 textwidth=79
 

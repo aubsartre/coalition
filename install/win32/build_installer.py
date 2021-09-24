@@ -92,5 +92,4 @@ if buildNsis:
     # Run NSIS
     os.system ("\"" + NSISDir + "/makensis.exe\" _coalition.nsi")
 
-# vim: tabstop=4 noexpandtab shiftwidth=4 softtabstop=4 textwidth=79
 

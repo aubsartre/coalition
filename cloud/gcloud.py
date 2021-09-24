@@ -78,5 +78,4 @@ def _getStartupScript(name, config):
             "coalition_server_port": config.get("coalition", "port"),}
     return template.substitute(values)
 
-# vim: tabstop=4 noexpandtab shiftwidth=4 softtabstop=4 textwidth=79
 

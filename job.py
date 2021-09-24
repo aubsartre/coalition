@@ -14,5 +14,4 @@ for i in range(1000) :
 
 sys.exit (0)
 
-# vim: tabstop=4 noexpandtab shiftwidth=4 softtabstop=4 textwidth=79
 

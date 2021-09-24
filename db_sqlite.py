@@ -12,5 +12,4 @@ class DBSQLite(DBSQL):
 
         super(DBSQLite, self).__init__()
 
-# vim: tabstop=4 noexpandtab shiftwidth=4 softtabstop=4 textwidth=79
 

@@ -96,5 +96,4 @@ def _getInstanceIdByName(name):
                         return instance["InstanceId"]
     return None
 
-# vim: tabstop=4 noexpandtab shiftwidth=4 softtabstop=4 textwidth=79
 

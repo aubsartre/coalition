@@ -143,5 +143,4 @@ elif action=="remove":
 else:
     print("I don't know what to do with myself. Use another action")
 
-# vim: tabstop=4 noexpandtab shiftwidth=4 softtabstop=4 textwidth=79
 

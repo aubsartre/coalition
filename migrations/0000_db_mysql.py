@@ -105,5 +105,4 @@ CREATE INDEX start_name ON Events(start)
 """,
 ]
 
-# vim: tabstop=4 noexpandtab shiftwidth=4 softtabstop=4 textwidth=79
 

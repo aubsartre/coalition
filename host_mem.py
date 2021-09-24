@@ -69,5 +69,4 @@ def getAvailableMem ():
         total, free = parseMemInfo ()
         return free * 1024
 
-# vim: tabstop=4 noexpandtab shiftwidth=4 softtabstop=4 textwidth=79
 

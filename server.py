@@ -914,5 +914,4 @@ else:
     if __name__ == '__main__':
         main()
 
-# vim: tabstop=4 noexpandtab shiftwidth=4 softtabstop=4 textwidth=79
 
