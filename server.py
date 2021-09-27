@@ -22,6 +22,7 @@ from twisted.internet import reactor
 
 from db_sql import LdapError
 
+DEFAULT_SERVER_PORT = 19211
 
 ### Functions ###
 
@@ -693,7 +694,7 @@ if not config.has_section('server'):
 if not config.has_option("server", "db_type"):
     config.set ("server", "db_type", "sqlite")
 
-port = cfgInt ('port', 19211)
+port = cfgInt ('port', DEFAULT_SERVER_PORT)
 
 timeout = cfgInt ('timeout', 60)
 verbose = cfgBool ('verbose', False)
