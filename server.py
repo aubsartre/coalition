@@ -5,14 +5,22 @@
 Coalition server.
 """
 
-from twisted.web import xmlrpc, server, static, http
-from twisted.internet import defer, reactor
-from twisted.web.server import Session
-import cPickle, time, os, getopt, sys, base64, re, thread, ConfigParser, random, shutil
-import atexit, json
-import smtplib
+import atexit
+import base64
+import ConfigParser
 from email.mime.text import MIMEText
-from textwrap import dedent, fill
+import getopt
+import json
+import os
+import re
+import smtplib
+import sys
+import thread
+from textwrap import dedent
+import time
+
+from twisted.web import xmlrpc, static, http
+from twisted.internet import reactor
 
 from db_sql import LdapError
 
@@ -233,8 +241,8 @@ def grantAddJob(user, cmd):
 
 def listenUDP():
     """Listen to UDP socket to respond to the workers broadcast."""
-    from socket import SOL_SOCKET, SO_BROADCAST
-    from socket import socket, AF_INET, SOCK_DGRAM, error
+
+    from socket import socket, AF_INET, SOCK_DGRAM
     s = socket (AF_INET, SOCK_DGRAM)
     s.bind (('0.0.0.0', port))
     while 1:
@@ -890,7 +898,6 @@ if sys.platform=="win32" and service:
 
         def SvcDoRun(self):
             vprint ("[Run] Service running")
-            import servicemanager
             self.CheckForQuit()
             main()
             vprint ("Service quitting")
