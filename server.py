@@ -658,28 +658,31 @@ class Workers(xmlrpc.XMLRPC):
         return str (db.endJob (hostname, int(jobId), int(errorCode), str(ip)))
 
 
-# Go to the script directory
-global installDir, dataDir
-if sys.platform=="win32":
-    import _winreg
-    # under windows, uses the registry setup by the installer
-    try:
-        hKey = _winreg.OpenKey (_winreg.HKEY_LOCAL_MACHINE, "SOFTWARE\\Mercenaries Engineering\\Coalition", 0, _winreg.KEY_READ)
-        installDir, _type = _winreg.QueryValueEx (hKey, "Installdir")
-        dataDir, _type = _winreg.QueryValueEx (hKey, "Datadir")
-    except OSError:
+def initializeLogDir():
+    """Create log directory if doesn't already exist."""
+
+    if sys.platform=="win32":
+        import _winreg
+        # under windows, uses the registry setup by the installer
+        try:
+            hKey = _winreg.OpenKey (_winreg.HKEY_LOCAL_MACHINE, "SOFTWARE\\Mercenaries Engineering\\Coalition", 0, _winreg.KEY_READ)
+            installDir, _type = _winreg.QueryValueEx (hKey, "Installdir")
+            dataDir, _type = _winreg.QueryValueEx (hKey, "Datadir")
+        except OSError:
+            installDir = "."
+            dataDir = "."
+    else:
         installDir = "."
         dataDir = "."
-else:
-    installDir = "."
-    dataDir = "."
-os.chdir (installDir)
+    os.chdir (installDir)
 
-# Create the logs/ directory
-try:
-    os.mkdir (dataDir + "/logs", 0755);
-except OSError:
-    pass
+    # Create the logs/ directory
+    try:
+        os.mkdir(os.path.join(dataDir, "logs"), 0o755)
+    except OSError:
+        pass
+
+initializeLogDir()
 
 config = ConfigParser.SafeConfigParser()
 config.read ("coalition.ini")
