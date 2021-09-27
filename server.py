@@ -657,8 +657,6 @@ class Workers(xmlrpc.XMLRPC):
     def json_endjob (self, hostname, jobId, errorCode, ip):
         return str (db.endJob (hostname, int(jobId), int(errorCode), str(ip)))
 
-GErr=0
-GOk=0
 
 # Go to the script directory
 global installDir, dataDir
