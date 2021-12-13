@@ -1,0 +1,22 @@
+# Reference: https://editorconfig.org
+# NB: read top to bottom; most recent rules take precedence
+
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+end_of_line = lf
+charset = utf-8
+max_line_length = 80
+
+# Use 2 spaces for the HTML and Yaml files
+[*.{html,yml}]
+indent_size = 2
+
+# Makefiles always use tabs for indentation
+[Makefile]
+indent_style = tab
+
