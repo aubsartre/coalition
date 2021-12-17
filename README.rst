@@ -2,8 +2,6 @@
    :target: http://coalition.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
-.. |badge-size| image:: https://reposs.herokuapp.com/?path=https://github.com/MercenariesEngineering/coalition
-
 .. |badge-version| image:: https://badge.fury.io/gh/MercenariesEngineering%2Fcoalition.svg
    :target: https://badge.fury.io/gh/MercenariesEngineering%2Fcoalition
 
@@ -12,7 +10,7 @@
 
 .. |badge-tests| image:: https://travis-ci.org/MercenariesEngineering/coalition.svg?branch=master
 
-|badge-doc| |badge-size| |badge-version| |badge-coverage| |badge-tests|
+|badge-doc| |badge-version| |badge-coverage| |badge-tests|
 
 `Full online documentation is availlble on ReadTheDocs <http://coalition.readthedocs.io/en/latest/>`_.
 
